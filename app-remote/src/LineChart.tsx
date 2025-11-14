@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-export default function DarkLineChart({
+export default function LineChart({
   clicksData = [6500, 6418, 6456, 6526, 6356, 6456],
   cpcData = [6456, 6356, 6526, 6332, 6418, 6500],
   categories = ["01 Feb", "02 Feb", "03 Feb", "04 Feb", "05 Feb", "06 Feb"],
@@ -23,113 +23,113 @@ export default function DarkLineChart({
     const svg = d3.select(svgRef.current);
     const tooltip = d3.select(tooltipRef.current);
 
+    const brandColor =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-fg-brand")
+        .trim() || "#1447E6";
+
+    const brandSecondaryColor =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-fg-brand-subtle")
+        .trim() || "#1E90FF";
+
     const w = container.clientWidth;
     const h = height;
 
     svg.attr("viewBox", `0 0 ${w} ${h}`).attr("width", w).attr("height", h);
     svg.selectAll("*").remove();
 
-    const margin = { top: 20, right: 10, bottom: 20, left: 10 };
+    const margin = { top: 10, right: 10, bottom: 10, left: 10 };
     const innerW = w - margin.left - margin.right;
     const innerH = h - margin.top - margin.bottom;
+
+    const x = d3
+      .scaleLinear()
+      .domain([0, categories.length - 1])
+      .range([0, innerW]);
+
+    const allData = [...clicksData, ...cpcData];
+    const minY = d3.min(allData)! * 0.95;
+    const maxY = d3.max(allData)! * 1.05;
+    const y = d3.scaleLinear().domain([minY, maxY]).range([innerH, 0]);
 
     const g = svg
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // X and Y scales
-    const x = d3
-      .scaleLinear()
-      .domain([0, categories.length - 1])
-      .range([0, innerW]);
-    const y = d3
-      .scaleLinear()
-      .domain([0, d3.max([...clicksData, ...cpcData])! * 1.1])
-      .range([innerH, 0]);
-
-    // Gradient for clicks
     const defs = svg.append("defs");
-    const clicksGradient = defs
+    const gradient1 = defs
       .append("linearGradient")
-      .attr("id", "clicksGradient")
+      .attr("id", "gradientClicks")
       .attr("x1", "0%")
       .attr("y1", "0%")
       .attr("x2", "0%")
       .attr("y2", "100%");
-
-    clicksGradient
+    gradient1
       .append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", "#4f46e5")
+      .attr("stop-color", brandColor)
       .attr("stop-opacity", 0.55);
-    clicksGradient
+    gradient1
       .append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "#4f46e5")
+      .attr("stop-color", brandColor)
       .attr("stop-opacity", 0);
 
-    // Gradient for CPC
-    const cpcGradient = defs
+    const gradient2 = defs
       .append("linearGradient")
-      .attr("id", "cpcGradient")
+      .attr("id", "gradientCPC")
       .attr("x1", "0%")
       .attr("y1", "0%")
       .attr("x2", "0%")
       .attr("y2", "100%");
-
-    cpcGradient
+    gradient2
       .append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", "#22c55e")
+      .attr("stop-color", brandSecondaryColor)
       .attr("stop-opacity", 0.55);
-    cpcGradient
+    gradient2
       .append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "#22c55e")
+      .attr("stop-color", brandSecondaryColor)
       .attr("stop-opacity", 0);
 
-    // Line generator
-    const lineGen = (data: number[]) =>
-      d3
-        .line<number>()
-        .x((_, i) => x(i))
-        .y((d) => y(d))
-        .curve(d3.curveMonotoneX)(data);
+    const area = d3
+      .area<number>()
+      .x((_, i) => x(i))
+      .y0(innerH)
+      .y1((d) => y(d))
+      .curve(d3.curveMonotoneX);
 
-    // Area generator
-    const areaGen = (data: number[], gradientId: string) =>
-      d3
-        .area<number>()
-        .x((_, i) => x(i))
-        .y0(innerH)
-        .y1((d) => y(d))
-        .curve(d3.curveMonotoneX);
-
-    // Clicks area + line
     g.append("path")
       .datum(clicksData)
-      .attr("d", areaGen(clicksData, "clicksGradient"))
-      .attr("fill", "url(#clicksGradient)");
+      .attr("d", area)
+      .attr("fill", "url(#gradientClicks)");
+    g.append("path")
+      .datum(cpcData)
+      .attr("d", area)
+      .attr("fill", "url(#gradientCPC)");
+
+    const line = d3
+      .line<number>()
+      .x((_, i) => x(i))
+      .y((d) => y(d))
+      .curve(d3.curveMonotoneX);
     g.append("path")
       .datum(clicksData)
-      .attr("d", lineGen(clicksData))
-      .attr("stroke", "#4f46e5")
-      .attr("stroke-width", 4)
-      .attr("fill", "none");
-
-    // CPC area + line
+      .attr("d", line)
+      .attr("stroke", brandColor)
+      .attr("stroke-width", 6)
+      .attr("fill", "none")
+      .attr("stroke-linecap", "round");
     g.append("path")
       .datum(cpcData)
-      .attr("d", areaGen(cpcData, "cpcGradient"))
-      .attr("fill", "url(#cpcGradient)");
-    g.append("path")
-      .datum(cpcData)
-      .attr("d", lineGen(cpcData))
-      .attr("stroke", "#22c55e")
-      .attr("stroke-width", 4)
-      .attr("fill", "none");
+      .attr("d", line)
+      .attr("stroke", brandSecondaryColor)
+      .attr("stroke-width", 6)
+      .attr("fill", "none")
+      .attr("stroke-linecap", "round");
 
-    // Hover interaction
     const overlay = g
       .append("rect")
       .attr("width", innerW)
