@@ -28,8 +28,6 @@ export default function AreaChart({
     const svg = d3.select(svgRef.current);
     const tooltip = d3.select(tooltipRef.current);
 
-    const brandColor = "#6366f1"; // Tailwind indigo-500
-
     const w = container.clientWidth;
     const h = height;
 
@@ -57,7 +55,7 @@ export default function AreaChart({
     const defs = svg.append("defs");
     const gradient = defs
       .append("linearGradient")
-      .attr("id", "areaGradient")
+      .attr("id", "darkGradient")
       .attr("x1", "0%")
       .attr("y1", "0%")
       .attr("x2", "0%")
@@ -66,13 +64,12 @@ export default function AreaChart({
     gradient
       .append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", brandColor)
+      .attr("stop-color", "#4f46e5") // színes kiemelés
       .attr("stop-opacity", 0.55);
-
     gradient
       .append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", brandColor)
+      .attr("stop-color", "#4f46e5")
       .attr("stop-opacity", 0);
 
     const area = d3
@@ -85,7 +82,7 @@ export default function AreaChart({
     g.append("path")
       .datum(data)
       .attr("d", area)
-      .attr("fill", "url(#areaGradient)");
+      .attr("fill", "url(#darkGradient)");
 
     const line = d3
       .line<number>()
@@ -96,11 +93,12 @@ export default function AreaChart({
     g.append("path")
       .datum(data)
       .attr("d", line)
-      .attr("stroke", brandColor)
-      .attr("stroke-width", 3)
+      .attr("stroke", "#4f46e5")
+      .attr("stroke-width", 6)
       .attr("fill", "none")
       .attr("stroke-linecap", "round");
 
+    // Hover interactions
     const overlay = g
       .append("rect")
       .attr("width", innerW)
@@ -111,7 +109,9 @@ export default function AreaChart({
     overlay
       .on("mousemove", (event) => {
         const [mx] = d3.pointer(event);
-        const idx = Math.round(x.invert(mx));
+        const x0 = x.invert(mx);
+        const idx = Math.round(x0);
+
         if (idx < 0 || idx >= data.length) return;
 
         const value = data[idx];
@@ -122,29 +122,34 @@ export default function AreaChart({
           .style("display", "block")
           .style("left", `${cx + 10}px`)
           .style("top", `${cy - 30}px`).html(`
-            <div class="text-xs text-gray-300">${categories[idx]}</div>
+            <div class="text-xs text-gray-400">${categories[idx]}</div>
             <div class="text-sm font-semibold text-white">${value}</div>
           `);
       })
-      .on("mouseleave", () => tooltip.style("display", "none"));
+      .on("mouseleave", () => {
+        tooltip.style("display", "none");
+      });
   }, [data, categories, height]);
 
   return (
-    <div className="max-w-sm w-full bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl shadow-sm p-4 md:p-6">
+    <div className="max-w-sm w-full bg-gradient-to-b from-black via-[#0d1a36] to-[#0d1a36] border border-gray-700 rounded-2xl shadow-lg p-4 md:p-6">
       <div className="flex justify-between items-start">
         <div>
-          <h5 className="text-2xl font-semibold text-gray-900">32.4k</h5>
-          <p className="text-gray-500">Users this week</p>
+          <h5 className="text-2xl font-semibold text-white">32.4k</h5>
+          <p className="text-gray-400">Users this week</p>
         </div>
         <div className="flex items-center px-2.5 py-0.5 font-medium text-green-500 text-center">
           <svg
             className="w-5 h-5"
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
           >
             <path
+              stroke="currentColor"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
@@ -154,19 +159,21 @@ export default function AreaChart({
           12%
         </div>
       </div>
-
-      <div ref={containerRef} className="relative w-full h-[260px] mt-4">
+      <div ref={containerRef} className="relative w-full h-[260px]">
         <svg ref={svgRef} className="w-full h-full"></svg>
         <div
           ref={tooltipRef}
-          className="absolute z-50 hidden pointer-events-none px-3 py-2 rounded-md shadow-lg bg-gray-900/90 border border-gray-700/60 backdrop-blur text-left"
+          className="
+          absolute z-50 hidden pointer-events-none px-3 py-2 rounded-md shadow-lg text-left
+          bg-gray-900/90 border border-gray-700 backdrop-blur
+        "
         />
       </div>
 
       <div className="grid grid-cols-1 items-center border-t border-gray-200 mt-4 pt-4">
         <div className="flex justify-between items-center">
           <button
-            className="text-sm font-medium text-gray-500 hover:text-gray-900 inline-flex items-center"
+            className="text-sm font-medium text-gray-300 hover:text-gray-900 inline-flex items-center"
             type="button"
           >
             Last 7 days
@@ -188,7 +195,7 @@ export default function AreaChart({
 
           <a
             href="#"
-            className="inline-flex items-center text-indigo-600 bg-transparent border border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded text-sm px-3 py-2"
+            className="inline-flex items-center text-indigo-400 bg-transparent border border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded text-sm px-3 py-2"
           >
             Users Report
             <svg
