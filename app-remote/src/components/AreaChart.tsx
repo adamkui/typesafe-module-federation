@@ -132,7 +132,7 @@ export default function AreaChart({
   }, [data, categories, height]);
 
   return (
-    <div className="max-w-sm w-full bg-gradient-to-b from-black via-[#0d1a36] to-[#0d1a36] border border-gray-700 rounded-2xl shadow-lg p-4 md:p-6">
+    <div className="min-w-72 max-w-sm w-full bg-gradient-to-b from-black via-[#0d1a36] to-[#0d1a36] border border-gray-700 rounded-2xl shadow-lg p-4 md:p-6">
       <div className="flex justify-between items-start">
         <div>
           <h5 className="text-2xl font-semibold text-white">32.4k</h5>
