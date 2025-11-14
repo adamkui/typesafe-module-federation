@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import federation from "@originjs/vite-plugin-federation";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
@@ -9,11 +10,12 @@ export default defineConfig({
       name: "app-remote",
       filename: "remoteEntry.js",
       exposes: {
-        "./UserCard": "./src/UserCard.tsx",
+        "./AreaChart": "./src/AreaChart.tsx",
         "./utils": "./src/utils.ts",
       },
       shared: ["react", "react-dom", "lodash"],
     }),
+    tailwindcss(),
   ],
   build: {
     target: "esnext",

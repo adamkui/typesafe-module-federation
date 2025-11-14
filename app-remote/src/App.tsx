@@ -1,10 +1,9 @@
-import UserCard from "./UserCard";
+import AreaChart from "./AreaChart";
 
 function App() {
   return (
     <>
-      <h2>Remote App</h2>
-      <UserCard firstName="Foo" lastName="Bar" />
+      <AreaChart />
     </>
   );
 }
