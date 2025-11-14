@@ -1,6 +1,8 @@
+import { Route, Routes } from "react-router";
 import { Header } from "./components/Header";
 import { Navbar } from "./components/Navbar";
-import { RemoteAppContainer } from "./components/RemoteAppContainer";
+import { Dashboard } from "./pages/Dashboard";
+import { HomePage } from "./pages/Home";
 
 // import type { lodash, formatName } from "appA/utils";
 // const { formatName, lodash } = await import("app-remote/utils").then(
@@ -26,7 +28,10 @@ export default function App() {
       <Header />
       <div className="absolute pt-20.5 flex flex-col sm:flex-row w-full h-full">
         <Navbar />
-        <RemoteAppContainer />
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route path="dashboard" element={<Dashboard />} />
+        </Routes>
       </div>
     </div>
   );

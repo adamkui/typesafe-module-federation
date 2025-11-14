@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 const RemoteAreaChart = lazy(() => import("app-remote/components/AreaChart"));
 const LineChart = lazy(() => import("app-remote/components/LineChart"));
 
-export const RemoteAppContainer = () => {
+export const Dashboard = () => {
   return (
     <div className={`flex w-full p-3 sm:p-6`}>
       <div
