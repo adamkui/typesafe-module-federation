@@ -4,11 +4,36 @@ body {
   font-family: Inter !important;
 
   #BelowHeader {
-    overflow-y: scroll;
-    overflow-y: auto;
     height: 100%;
     max-height: 100%;
     overflow-y: auto;
     width: 100%;
   }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1f2937;
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #2d3a56, #1f5c4d);
+    border-radius: 8px;
+    border: 3px solid #1f2937;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #3c4a6a, #257364);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #1f2937;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #2d3a56 #1f2937;
 }

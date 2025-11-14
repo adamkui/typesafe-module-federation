@@ -3,18 +3,9 @@ import { Header } from "./components/Header";
 import { Navbar } from "./components/Navbar";
 import { Dashboard } from "./pages/Dashboard";
 import { HomePage } from "./pages/Home";
-
-// import type { lodash, formatName } from "appA/utils";
-// const { formatName, lodash } = await import("app-remote/utils").then(
-//   (utils) => utils.default
-// );
+import { Calculations } from "./pages/Calculations";
 
 export default function App() {
-  // useEffect(() => {
-  //   console.log(formatName("foo", "bar"));
-  //   console.log(lodash.camelCase("text to transform into camel case"));
-  // }, []);
-
   return (
     <div className="min-h-screen w-full relative text-white">
       <div
@@ -34,6 +25,7 @@ export default function App() {
         <Routes>
           <Route index element={<HomePage />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="calculations" element={<Calculations />} />
         </Routes>
       </div>
     </div>

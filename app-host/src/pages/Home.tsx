@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export const HomePage = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full px-4 text-center">
+    <div className="flex flex-col items-center justify-center w-full px-4 text-center h-full">
       <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
         Welcome to the Host Application
       </h1>
