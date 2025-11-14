@@ -161,7 +161,7 @@ export default function LineChart({
   }, [clicksData, cpcData, categories, height]);
 
   return (
-    <div className="min-w-72 max-w-sm w-full bg-gradient-to-b from-black via-[#0d1a36] to-[#0d1a36] border border-gray-700 rounded-2xl shadow-lg p-4 md:p-6">
+    <div className="min-w-60 max-w-sm w-full bg-gradient-to-b from-black via-[#0d1a36] to-[#0d1a36] border border-gray-700 rounded-2xl shadow-lg p-4 md:p-6">
       <div className="flex justify-between mb-4 md:mb-6">
         <div className="grid gap-4 grid-cols-2">
           <div>
