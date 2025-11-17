@@ -1,6 +1,7 @@
 # Module Federation Microfrontend POC
 
 This project demonstrates how to implement a typesafe **Module Federation**-based microfrontend architecture, without remote app side type definitions.
+Check out my article on Medium regarding simple type-safe Vite+React Module Federation [here](https://adamkui.medium.com/stop-writing-remote-types-type-safe-module-federation-in-vite-react-e8f01788d820).
 
 ## Running the Project
 
